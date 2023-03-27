@@ -3,15 +3,15 @@ package pl.lukasik.backend.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import pl.lukasik.backend.controller.dto.UploadStatistic;
 import pl.lukasik.backend.model.UserEntity;
 import pl.lukasik.backend.service.UserService;
 
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
 
@@ -22,16 +22,17 @@ public class UserController {
     }
 
     @PostMapping("/load")
-    public ResponseEntity<String> loadUsers(String path) {
+    public UploadStatistic loadUsers(@RequestParam("file") MultipartFile multipartFile) {
+        String originalFilename = multipartFile.getOriginalFilename();
         try {
-            userService.loadUsersFromFile(".\\data\\examples\\user3.json");
+            return userService.loadUsersFromFile(originalFilename);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok("Users loaded successfully");
+
     }
 
-    @GetMapping()
+    @GetMapping("/users")
     public Page<UserEntity> getUsers(@PageableDefault(size = 25) Pageable pageable){
         return userService.getUsers(pageable);
     }

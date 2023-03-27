@@ -1,18 +1,22 @@
 package pl.lukasik.backend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.lukasik.backend.controller.dto.UploadStatistic;
 import pl.lukasik.backend.model.UserEntity;
 import pl.lukasik.backend.model.UserList;
 import pl.lukasik.backend.repository.UserRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -20,6 +24,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    @Value("${app.dirUpload}")
+    private String dirUpload;
 
     private final UserRepository userRepository;
 
@@ -29,9 +36,9 @@ public class UserService {
 
     @Async
     @Transactional
-    public void loadUsersFromFile(String fileName) throws IOException {
+    public UploadStatistic loadUsersFromFile(String fileName) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        File file = new File(fileName);
+        File file = new File(dirUpload + fileName);
         UserList users = mapper.readValue(file, UserList.class);
         List<UserEntity> userList = users.getUsers().stream()
                 .map(user -> UserEntity.builder()
@@ -43,8 +50,12 @@ public class UserService {
         Instant start = Instant.now();
         userRepository.saveAll(userList);
         Instant end = Instant.now();
-        Duration duration = Duration.between(start, end); // zwrócic obiekt statystyk
-        System.out.println("Inserted " + userList.size() + " users in " + duration.getSeconds() + " seconds");
+        Duration duration = Duration.between(start, end);
+        return UploadStatistic.builder()
+                .fileName(fileName)
+                .uploadDuration(duration.getSeconds())
+                .size(userList.size())
+                .build();
         }
 
 
