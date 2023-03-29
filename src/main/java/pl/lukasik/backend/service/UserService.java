@@ -53,22 +53,13 @@ public class UserService {
                 .uploadDuration(duration.getSeconds())
                 .size(userList.size())
                 .build();
-        }
-
-    public Page<UserEntity> searchUsers(String searchTerm, Pageable pageable) {
-        return userRepository.searchUsers(searchTerm, pageable);
     }
-
 
     public Page<UserEntity> getUsers(Pageable pageable, String searchValue) {
-        if(searchValue!= null && !searchValue.isEmpty()){
-            return userRepository.searchUsers(searchValue,pageable);
+        if (searchValue != null && !searchValue.isEmpty()) {
+            return userRepository.searchUsers(searchValue, pageable);
         }
         return userRepository.findAll(pageable);
-    }
-
-    public UserEntity getUserByName(String name) {
-        return userRepository.findByName(name);
     }
 
 

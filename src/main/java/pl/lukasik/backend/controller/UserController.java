@@ -34,11 +34,8 @@ public class UserController {
     }
 
     @GetMapping()
-    public Page<UserEntity> getUsers(@PageableDefault(size = 25) Pageable pageable,
+    public Page<UserEntity> getUsers(@PageableDefault(size = 15) Pageable pageable,
             @RequestParam(value = "searchValue", required = false) String searchValue) {
         return userService.getUsers(pageable, searchValue);
     }
-
-
-
 }

@@ -12,8 +12,10 @@ import pl.lukasik.backend.model.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    UserEntity findByName(String name);
+        @Query("SELECT u FROM UserEntity u WHERE " +
+                "LOWER(u.name) = LOWER(:searchValue) OR " +
+                "LOWER(u.surname) = LOWER(:searchValue) OR " +
+                "LOWER(u.login) = LOWER(:searchValue)")
+        Page<UserEntity> searchUsers(@Param("searchValue") String searchValue, Pageable pageable);
 
-    @Query("SELECT u FROM UserEntity u WHERE u.name LIKE %:searchTerm% OR u.surname LIKE %:searchTerm% OR u.login LIKE %:searchTerm%")
-    public Page<UserEntity> searchUsers(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
