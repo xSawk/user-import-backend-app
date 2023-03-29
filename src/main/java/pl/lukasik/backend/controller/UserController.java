@@ -12,6 +12,7 @@ import pl.lukasik.backend.service.UserService;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/api/v1/users")
 public class UserController {
 
 
@@ -32,14 +33,12 @@ public class UserController {
 
     }
 
-    @GetMapping("/users")
-    public Page<UserEntity> getUsers(@PageableDefault(size = 25) Pageable pageable){
-        return userService.getUsers(pageable);
+    @GetMapping()
+    public Page<UserEntity> getUsers(@PageableDefault(size = 25) Pageable pageable,
+            @RequestParam(value = "searchValue", required = false) String searchValue) {
+        return userService.getUsers(pageable, searchValue);
     }
 
-    @GetMapping("/{name}")
-    public UserEntity getUserByName(@PathVariable String name){
-        return userService.getUserByName(name);
-    }
+
 
 }

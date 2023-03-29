@@ -3,7 +3,6 @@ package pl.lukasik.backend.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,6 @@ import pl.lukasik.backend.repository.UserRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -58,14 +55,23 @@ public class UserService {
                 .build();
         }
 
+    public Page<UserEntity> searchUsers(String searchTerm, Pageable pageable) {
+        return userRepository.searchUsers(searchTerm, pageable);
+    }
 
-    public Page<UserEntity> getUsers(Pageable pageable) {
+
+    public Page<UserEntity> getUsers(Pageable pageable, String searchValue) {
+        if(searchValue!= null && !searchValue.isEmpty()){
+            return userRepository.searchUsers(searchValue,pageable);
+        }
         return userRepository.findAll(pageable);
     }
 
     public UserEntity getUserByName(String name) {
         return userRepository.findByName(name);
     }
+
+
 }
 
 
