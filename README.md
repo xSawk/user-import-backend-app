@@ -65,7 +65,7 @@ The application should now be running at http://localhost:8080
 
 ### **Frontend**
 
-Navigate to the project directory (frontend4system) and install dependencies using npm:
+Navigate to the project directory (user-import-front-app) and install dependencies using npm:
 ```sh
 npm ci
 ```  
