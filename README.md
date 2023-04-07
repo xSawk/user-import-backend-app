@@ -2,7 +2,7 @@
 
 The application allows for importing user data from a JSON file, saves it to a database, and then displays a list of users with sorting and searching capabilities.
 
-
+https://user-images.githubusercontent.com/57503560/230596177-5580abaf-98bd-4861-9083-59ee48b1cf77.mp4
 
 It consists of three screens:
 
